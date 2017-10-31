@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Weather App</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container sectionCity">
+    <div class="row">
+      <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+        <form class="form-inline" action="/add">
+          <div class="form-group">
+            <label for="city">Ville</label>
+            <input type="text" class="form-control" id="city" name="city" placeholder="Lyon, Paris ...">
+          </div>
+          <button type="submit" id="btn-valide" class="btn btn-warning">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="content">
+
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-offset-2 col-sm-8">
+        <ul class="list-group">
+         <%
+         for(var i=0; i<cityList.length; i++) {
+         %>
+           <li class="list-group-item"><span class="city"><%=cityList[i].name%></span> <img class="logo-meteo" src="<%=cityList[i].icon%>"> <span class="desc"><%=cityList[i].desc%></span> <span class="label label-warning"><%=cityList[i].temp_max%></span> <span class="label label-default"><%=cityList[i].temp_min%></span> <a href="/delete?position=<%=i%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
+         <%
+         }
+         %>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>
