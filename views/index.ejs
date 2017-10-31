@@ -4,12 +4,46 @@
   <meta charset="utf-8">
 
   <title>Weather App</title>
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script
+    src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+    integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+    crossorigin="anonymous"></script>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css">
+  <script>
+  $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+
+    $( "#sortable" ).on( "sortupdate", function( event, ui ) {
+      var sortedIDs = $( "#sortable" ).sortable( "toArray" );
+      console.log(sortedIDs);
+      var sortIdString = JSON.stringify(sortedIDs);
+
+      $.getJSON("/update?sortlist="+sortIdString, function(data) {
+        if(data.result == true){
+          $(".list-group-item").each(function(index) {
+            console.log(index);
+            $(this).attr("id", index);
+            $(this).find("a").attr("href", "/delete?position="+index)
+          })
+        }
+      });
+    } );
+
+  } );
+
+
+
+  </script>
 </head>
 <body>
 
@@ -32,11 +66,11 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12 col-sm-offset-2 col-sm-8">
-        <ul class="list-group">
+        <ul id="sortable" class="list-group">
          <%
          for(var i=0; i<cityList.length; i++) {
          %>
-           <li class="list-group-item"><span class="city"><%=cityList[i].name%></span> <img class="logo-meteo" src="<%=cityList[i].icon%>"> <span class="desc"><%=cityList[i].desc%></span> <span class="label label-warning"><%=cityList[i].temp_max%></span> <span class="label label-default"><%=cityList[i].temp_min%></span> <a href="/delete?position=<%=i%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
+           <li id="<%= i %>" class="list-group-item"><span class="city"><%=cityList[i].name%></span> <img class="logo-meteo" src="<%=cityList[i].icon%>"> <span class="desc"><%=cityList[i].desc%></span> <span class="label label-warning"><%=cityList[i].temp_max%></span> <span class="label label-default"><%=cityList[i].temp_min%></span> <a href="/delete?position=<%=i%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
          <%
          }
          %>
