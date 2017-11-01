@@ -32,8 +32,11 @@ app.get('/update', function (req, res) {
   console.log(sortList);
   var cityListTmp = [];
   for(var i=0; i<sortList.length; i++) {
-    var oldPosition = sortList[i];
-    cityListTmp.push(cityList[oldPosition]);
+    for(var j=0; j<cityList.length; j++){
+      if(sortList[i] == cityList[j].name){
+        cityListTmp.push(cityList[j]);
+      }
+    }
   }
   cityList = cityListTmp;
   res.send({result : true});
