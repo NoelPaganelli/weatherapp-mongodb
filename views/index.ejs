@@ -68,7 +68,7 @@
          <%
          for(var i=0; i<cityList.length; i++) {
          %>
-           <li id="<%= cityList[i].name %>" class="list-group-item"><span class="city"><%=cityList[i].name%></span> <img class="logo-meteo" src="<%=cityList[i].icon%>"> <span class="desc"><%=cityList[i].desc%></span> <span class="label label-warning"><%=cityList[i].temp_max%></span> <span class="label label-default"><%=cityList[i].temp_min%></span> <a href="/delete?position=<%=i%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
+           <li id="<%= cityList[i].timestamp %>" class="list-group-item"><span class="city"><%=cityList[i].name%></span> <img class="logo-meteo" src="<%=cityList[i].icon%>"> <span class="desc"><%=cityList[i].desc%></span> <span class="label label-warning"><%=cityList[i].temp_max%></span> <span class="label label-default"><%=cityList[i].temp_min%></span> <a href="/delete?position=<%=i%>"><span class="glyphicon glyphicon-remove-circle"></span></a></li>
          <%
          }
          %>
