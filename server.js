@@ -15,14 +15,17 @@ var citySchema = mongoose.Schema({
     desc: String,
     icon: String,
     temp_min: String,
-    temp_max: String
+    temp_max: String,
+    position: Number
 });
 var cityModel = mongoose.model('city', citySchema);
 
 var cityList = [];
 
 app.get('/', function (req, res) {
-  cityModel.find(function (err, datas) {
+  var query = cityModel.find();
+  query.sort({position: 1});
+  query.exec(function (err, datas) {
      res.render('index', {cityList: datas});
   })
 });
@@ -34,44 +37,63 @@ app.get('/add', function (req, res) {
      //var city = {timestamp: Date.now(), name: body.name, desc: body.weather[0].description, icon: "http://openweathermap.org/img/w/"+body.weather[0].icon+".png", temp_min: body.main.temp_min+"°C", temp_max: body.main.temp_max+"°C"};
      //cityList.push(city);
      console.log(body);
+     var query = cityModel.find();
+     query.sort({position: 1});
+     query.exec(function (err, datas) {
 
+        var nexPosition = 1;
+        if(datas.length>0) {
+          nexPosition = datas[datas.length-1].position + 1;
+        }
 
-      var city = new cityModel ({
-        name: body.name,
-        desc: body.weather[0].description,
-        icon: "http://openweathermap.org/img/w/"+body.weather[0].icon+".png",
-        temp_min: body.main.temp_min+"°C",
-        temp_max: body.main.temp_max+"°C"
-      });
-     city.save(function (error, city) {
-      console.log(error);
-      console.log(city);
-      cityModel.find(function (err, datas) {
-         res.render('index', {cityList: datas});
-      })
-     });
-
+        var city = new cityModel ({
+          name: body.name,
+          desc: body.weather[0].description,
+          icon: "http://openweathermap.org/img/w/"+body.weather[0].icon+".png",
+          temp_min: body.main.temp_min+"°C",
+          temp_max: body.main.temp_max+"°C",
+          position: nexPosition
+        });
+       city.save(function (error, city) {
+        console.log(error);
+        console.log(city);
+        var query = cityModel.find();
+        query.sort({position: 1});
+        query.exec(function (err, datas) {
+           res.render('index', {cityList: datas});
+        })
+       });
+     })
   });
 
 });
 
 app.get('/delete', function (req, res) {
-  cityList.splice(req.query.position,1);
-  res.render('index', {cityList});
+  //cityList.splice(req.query.position,1);
+  cityModel.remove({ _id: req.query.id}, function(error) {
+    var query = cityModel.find();
+    query.sort({position: 1});
+    query.exec(function (err, datas) {
+       res.render('index', {cityList: datas});
+    })
+  });
+
 });
 
 app.get('/update', function (req, res) {
   var sortList = JSON.parse(req.query.sortlist);
   console.log(sortList);
-  var cityListTmp = [];
+  //var cityListTmp = [];
   for(var i=0; i<sortList.length; i++) {
-    for(var j=0; j<cityList.length; j++){
+
+    cityModel.update({ _id: sortList[i]}, { position: i });
+    /*for(var j=0; j<cityList.length; j++){
       if(sortList[i] == cityList[j].timestamp){
         cityListTmp.push(cityList[j]);
       }
-    }
+    }*/
   }
-  cityList = cityListTmp;
+  //cityList = cityListTmp;
   res.send({result : true});
 });
 
